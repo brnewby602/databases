@@ -26,7 +26,7 @@ var app = {
     app.$roomSelect.on('change', app.saveRoom);
 
     // Fetch previous messages
-   // app.startSpinner();
+    app.startSpinner();
     app.fetch(false);
 
     // Poll for new messages
@@ -34,7 +34,7 @@ var app = {
   },
 
   send: function(data) {
-    //app.startSpinner();
+    app.startSpinner();
     // Clear messages input
     app.$message.val('');
 
@@ -72,7 +72,6 @@ var app = {
         var displayedRoom = $('.chat span').first().data('roomname');
         app.stopSpinner();
         // Only bother updating the DOM if we have a new message
-        console.log(mostRecentMessage.objectId, app.lastMessageId, app.roomname, displayedRoom);
         if (mostRecentMessage.objectId !== app.lastMessageId || app.roomname !== displayedRoom) {
           // Update the UI with the fetched rooms
           app.populateRooms(data.results);
@@ -206,7 +205,7 @@ var app = {
         app.fetch();
       }
     } else {
-      //app.startSpinner();
+      app.startSpinner();
       // Store as undefined for empty names
       app.roomname = app.$roomSelect.val();
 
@@ -229,8 +228,8 @@ var app = {
   },
 
   startSpinner: function() {
-    // $('.spinner img').show();
-    // $('form input[type=submit]').attr('disabled', 'true');
+    $('.spinner img').show();
+    $('form input[type=submit]').attr('disabled', 'true');
   },
 
   stopSpinner: function() {

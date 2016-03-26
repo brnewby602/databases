@@ -20,7 +20,7 @@ var Messages = db.define('messages', {
   roomname: Sequelize.STRING,
   createdAt: Sequelize.DATE,
   updatedAt: Sequelize.DATE,
-  user_id: Sequelize.INTEGER
+  'user_id': Sequelize.INTEGER
 });
 
 User.hasMany(Messages, {foreignKey: 'id_user'});

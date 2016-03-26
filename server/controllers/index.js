@@ -50,9 +50,8 @@ module.exports = {
         'text': req.body.text,
         'roomname': req.body.roomname
       };
-      chat.text = chat.text.replace(/(\\+)?'/g, '\\\'');
+      chat.text = chat.text.replace(/(\\+)?'/g, '\'');
       db.insertMessage(chat, function(results) {
-        console.log(results);
         var returnObject = {
           objectId: results.insertId
         };

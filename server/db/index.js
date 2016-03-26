@@ -1,17 +1,5 @@
 var Sequelize = require('sequelize');
 
-// var mysql = require('mysql');
-
-// Create a database connection and export it from this file.
-// You will need to connect with the user "root", no password,
-// and to the database "chat".
-
-// var connection = mysql.createConnection({
-//   host: 'localhost',
-//   user: 'root',
-//   password: 'hr',
-//   database: 'chat'
-// });
 var connection = new Sequelize('chat', 'root', 'hr');
 
 /* first define the data structure by giving property names and datatypes
@@ -38,7 +26,6 @@ var Messages = connection.define('messages', {
 }, {
   classMethods: {
     associate: function(model) {
-      console.log("IM HERE");
 
       Messages.belongsTo(model, {
         onDelete: 'CASCADE',
@@ -55,13 +42,9 @@ var Messages = connection.define('messages', {
 Messages.associate(User);
 User.associate(Messages);
 
-//User.hasMany(Messages, {foreignKey: 'id_user'});
-//Messages.belongsTo(User, {foreignKey: 'id_user'});
-
 module.exports.createConnection = function() {
   var userid = null;
-  // console.log(User);
-  // console.log(connection);
+
   connection.authenticate()
       .then(function() {
         console.log('successful authentication');
@@ -80,27 +63,6 @@ module.exports.createConnection = function() {
         }
       );
       });
-      // .then(function() {
-      //   // console.log('im here 444****************');
-      //   // connection.sync().then(function () {
-      //   User.create({
-      //     name: 'Jake'
-      //   });
-      //   // });
-      // })
-      // .then(function() {
-      //   // console.log('im here 444****************');
-      //   connection.sync().then(function () {
-      //     Messages.create({
-      //       text: 'sample chat message',
-      //       roomname: 'lobby',
-      //       userId: userid
-
-      //     }).then(function (data) {
-      //       // console.log(data.values);
-      //     });
-      //   });
-      // });
 };
 
 /*
@@ -117,26 +79,6 @@ module.exports.createConnection = function() {
 
 */
 
-/* You'll need to
- * npm install sequelize
- * before running this example. Documentation is at http://sequelizejs.com/
- */
-
-
-/* TODO this constructor takes the database name, username, then password.
- * Modify the arguments if you need to */
-
-
-// Messages.find({ where: { ...}, include: [User]})
-
-
-
-
-
-
-
-
-
 module.exports.insertMessage = function(message, callback) {
   var roomname = message.roomname;
   var username = message.username;
@@ -151,8 +93,8 @@ module.exports.insertMessage = function(message, callback) {
       text: message,
       roomname: roomname,
       userId: user.id
-    }).then(function() {
-      console.log('successfully created message');
+    }).then(function(data) {
+      callback({insertId: data.id});
     }).catch(function(err) {
       console.log('failed to create message, err = ' + err);
     });
@@ -170,24 +112,32 @@ module.exports.insertUser = function(username) {
 /*
 [{"id":1,"message":"In mercy's name, three days is all I need.","createdAt":"2016-03-26T02:02:33.000Z","updatedAt":"2016-03-26T02:02:33.000Z","roomname":"Hello","id_user":1}]
 */
+
+/*
+[{"id":1,"text":"testmessage 30000","roomname":"lobby","createdAt":"2016-03-26T23:02:51.000Z","updatedAt":"2016-03-26T23:02:51.000Z","userId":1,"user":{"id":1,"name":"Jonathan","createdAt":"2016-03-26T16:00:08.000Z","updatedAt":"2016-03-26T16:00:08.000Z"}}
+*/
+
 module.exports.getMessages = function(callback) {
 
-  // connection.query('SELECT messages.id, text, createdAt, updatedAt, roomname, name FROM messages INNER JOIN user on messages.id_user = user.id ORDER BY createdAt ASC', function (err, results) {
-  //   if (err) {
-  //     console.log('Error in getting messages: ' + err);
-  //   } else {
+  Messages.findAll( {
+    include: [{model: User, required: true, attributes: ['name']}]
+  }).then(function(data) {
+    var chats = data.map(function(chat) {
+      chat.username = chat.user.name;
+      chat.objectId = chat.id; 
+      return {
+        objectId: chat.id,
+        username: chat.user.name,
+        text: chat.text,
+        roomname: chat.roomname,
+        createdAt: chat.createdAt,
+        updatedAt: chat.updatedAt
+      };
+    });
+    callback({results: chats});
+  }).catch(function(err) {
+    console.log('FAILED TO retreive messages, err = ' + JSON.stringify(err));
 
-  //     console.log(JSON.stringify(results));
-  //     results.map(function(chat) {
+  });
 
-  //       // console.log('chat!!!!');
-  //       // console.log(JSON.stringify(chat));
-  //       chat.objectId = chat.id;
-  //       chat.username = chat.name;
-  //       delete chat.id;
-  //       delete chat.name;
-  //     });
-  //     callback({ results: results });
-  //   }
-  // });
 };
