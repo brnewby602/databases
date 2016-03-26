@@ -18,14 +18,25 @@
         if (newSearch !== '' & newSearch !== '?') {
           newSearch += '&';
         }
+        var username = (prompt('What is your name?') || 'anonymous');
         /*
         TODO - complete ajax call to add user
+        */
         $.ajax({
           type: 'POST',
-          url: 
+          url: '/classes/users',
+          data: JSON.stringify({ username: username }),
+          contentType: 'application/json',
+
+          success: function() {
+            console.log('success?');
+          },
+          error: function() {
+            console.log('error');
+          }
         });
-        */
-        newSearch += 'username=' + (prompt('What is your name?') || 'anonymous');
+        
+        newSearch += 'username=' + username;
         window.location.search = newSearch;
       }
     </script>

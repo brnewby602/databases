@@ -70,11 +70,16 @@ module.exports.insertUser = function(username) {
 [{"id":1,"message":"In mercy's name, three days is all I need.","createdAt":"2016-03-26T02:02:33.000Z","updatedAt":"2016-03-26T02:02:33.000Z","roomname":"Hello","id_user":1}]
 */
 module.exports.getMessages = function(callback) {
-  connection.query('SELECT * FROM messages INNER JOIN user on messages.id_user = user.id', function (err, results) {
+  connection.query('SELECT messages.id, text, createdAt, updatedAt, roomname, name FROM messages INNER JOIN user on messages.id_user = user.id ORDER BY createdAt ASC', function (err, results) {
     if (err) {
       console.log('Error in getting messages: ' + err);
     } else {
+
+      console.log(JSON.stringify(results));
       results.map(function(chat) {
+
+        // console.log('chat!!!!');
+        // console.log(JSON.stringify(chat));
         chat.objectId = chat.id;
         chat.username = chat.name;
         delete chat.id;

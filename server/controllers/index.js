@@ -52,6 +52,7 @@ module.exports = {
       };
       chat.text = chat.text.replace(/(\\+)?'/g, '\\\'');
       db.insertMessage(chat, function(results) {
+        console.log(results);
         var returnObject = {
           objectId: results.insertId
         };
