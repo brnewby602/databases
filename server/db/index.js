@@ -48,7 +48,6 @@ module.exports.insertMessage = function(message, callback) {
     '\',(select id from user where name = \'' + username + 
     '\'))';
 
-  console.log(query);
   connection.query(query, function (err, results) {
     if (err) {
       console.log('Error in selecting room row: ' + err);
@@ -79,7 +78,6 @@ module.exports.getMessages = function(callback) {
         chat.objectId = chat.id;
         delete chat.id;
       });
-      console.log('inside getMessages b4 return: ' + JSON.stringify(results));
       callback({ results: results });
     }
   });
