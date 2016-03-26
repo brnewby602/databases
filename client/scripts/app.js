@@ -26,7 +26,7 @@ var app = {
     app.$roomSelect.on('change', app.saveRoom);
 
     // Fetch previous messages
-    app.startSpinner();
+   // app.startSpinner();
     app.fetch(false);
 
     // Poll for new messages
@@ -34,7 +34,7 @@ var app = {
   },
 
   send: function(data) {
-    app.startSpinner();
+    //app.startSpinner();
     // Clear messages input
     app.$message.val('');
 
@@ -206,7 +206,7 @@ var app = {
         app.fetch();
       }
     } else {
-      app.startSpinner();
+      //app.startSpinner();
       // Store as undefined for empty names
       app.roomname = app.$roomSelect.val();
 
@@ -229,8 +229,8 @@ var app = {
   },
 
   startSpinner: function() {
-    $('.spinner img').show();
-    $('form input[type=submit]').attr('disabled', 'true');
+    // $('.spinner img').show();
+    // $('form input[type=submit]').attr('disabled', 'true');
   },
 
   stopSpinner: function() {

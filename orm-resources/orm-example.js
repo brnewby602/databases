@@ -10,15 +10,23 @@ var db = new Sequelize('chatter', 'root', '');
 
 /* first define the data structure by giving property names and datatypes
  * See http://sequelizejs.com for other datatypes you can use besides STRING. */
-var User = db.define('User', {
+var User = db.define('user', {
   username: Sequelize.STRING
 });
 
-var Message = db.define('Message', {
+var Messages = db.define('messages', {
   userid: Sequelize.INTEGER,
   text: Sequelize.STRING,
-  roomname: Sequelize.STRING
+  roomname: Sequelize.STRING,
+  createdAt: Sequelize.DATE,
+  updatedAt: Sequelize.DATE,
+  user_id: Sequelize.INTEGER
 });
+
+User.hasMany(Messages, {foreignKey: 'id_user'});
+Messages.belongsTo(User, {foreignKey: 'id_user'});
+
+// Messages.find({ where: { ...}, include: [User]})
 
 /* .sync() makes Sequelize create the database table for us if it doesn't
  *  exist already: */
