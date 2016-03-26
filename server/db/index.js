@@ -5,10 +5,10 @@ var mysql = require('mysql');
 // and to the database "chat".
 
 var connection = mysql.createConnection({
-  host     : 'localhost',
-  user     : 'root',
-  password : 'hr',
-  database : 'chat'
+  host: 'localhost',
+  user: 'root',
+  password: 'hr',
+  database: 'chat'
 });
 
 
@@ -28,7 +28,7 @@ module.exports.createConnection = function() {
 | Field     | Type      | Null | Key | Default | Extra          |
 +-----------+-----------+------+-----+---------+----------------+
 | id        | int(11)   | NO   | PRI | NULL    | auto_increment |
-| text      | char(255) | YES  |     | NULL    |                |
+| message   | char(255) | YES  |     | NULL    |                |
 | createdAt | datetime  | YES  |     | NULL    |                |
 | updatedAt | datetime  | YES  |     | NULL    |                |
 | id_room   | int(11)   | YES  | MUL | NULL    |                |
@@ -38,12 +38,12 @@ module.exports.createConnection = function() {
 */
 
 
-module.exports.insertMessage = function(message) {
+module.exports.insertMessage = function(message, callback) {
   var roomname = message.roomname;
   var username = message.username;
-  var text = message.text;
+  var message = message.text;
 
-  var query = 'INSERT INTO messages VALUES (NULL, \'' + text +
+  var query = 'INSERT INTO messages VALUES (NULL, \'' + message +
     '\', NOW(), NOW(), \'' + roomname +
     '\',(select id from user where name = \'' + username + 
     '\'))';
@@ -53,7 +53,7 @@ module.exports.insertMessage = function(message) {
     if (err) {
       console.log('Error in selecting room row: ' + err);
     } else {
-      console.log('results = ' + JSON.stringify(results));
+      callback(results);
     }
   });
 };
@@ -63,7 +63,24 @@ module.exports.insertUser = function(username) {
     if (err) {
       console.log('Error in inserting user row: ' + err);
     } else {
-      console.log('results = ' + JSON.stringify(results));
+    }
+  });
+};
+
+/*
+[{"id":1,"message":"In mercy's name, three days is all I need.","createdAt":"2016-03-26T02:02:33.000Z","updatedAt":"2016-03-26T02:02:33.000Z","roomname":"Hello","id_user":1}]
+*/
+module.exports.getMessages = function(callback) {
+  connection.query('SELECT * FROM messages', function (err, results) {
+    if (err) {
+      console.log('Error in getting messages: ' + err);
+    } else {
+      results.map(function(chat) {
+        chat.objectId = chat.id;
+        delete chat.id;
+      });
+      console.log('inside getMessages b4 return: ' + JSON.stringify(results));
+      callback({ results: results });
     }
   });
 };
