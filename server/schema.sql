@@ -35,28 +35,15 @@ USE chat;
 -- 
 -- ---
 
-DROP TABLE IF EXISTS message;
+DROP TABLE IF EXISTS messages;
     
-CREATE TABLE message (
+CREATE TABLE messages (
   id INTEGER NULL AUTO_INCREMENT DEFAULT NULL COMMENT 'Map to objectId of message',
-  text CHAR(255) NULL DEFAULT NULL COMMENT 'Chat message text',
+  text VARCHAR(255) NULL DEFAULT NULL COMMENT 'Chat message text',
   createdAt DATETIME NULL DEFAULT NULL,
   updatedAt DATETIME NULL DEFAULT NULL,
-  id_room INTEGER NULL DEFAULT NULL,
+  roomname VARCHAR(255) NULL DEFAULT NULL,
   id_user INTEGER NULL DEFAULT NULL,
-  PRIMARY KEY (id)
-);
-
--- ---
--- Table room
--- 
--- ---
-
-DROP TABLE IF EXISTS room;
-    
-CREATE TABLE room (
-  id INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  name VARCHAR(255) NULL DEFAULT NULL,
   PRIMARY KEY (id)
 );
 
@@ -70,15 +57,15 @@ DROP TABLE IF EXISTS user;
 CREATE TABLE user (
   id INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
   name VARCHAR(255) NULL DEFAULT NULL,
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  UNIQUE (name)
 );
 
 -- ---
 -- Foreign Keys 
 -- ---
 
-ALTER TABLE message ADD FOREIGN KEY (id_room) REFERENCES room (id);
-ALTER TABLE message ADD FOREIGN KEY (id_user) REFERENCES user (id);
+ALTER TABLE messages ADD FOREIGN KEY (id_user) REFERENCES user (id);
 
 -- ---
 -- Table Properties
