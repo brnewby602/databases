@@ -7,12 +7,28 @@
 
     <!-- dependencies -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.15/browser.js"></script>
-    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="client/bower_components/jquery/dist/jquery.js"></script>
     <!-- your scripts -->
-    <script src="env/config.js"></script>
     <script src="scripts/app.js"></script>
   </head>
   <body>
+    <script>
+      if (!/(&|\?)username=/.test(window.location.search)) {
+        var newSearch = window.location.search;
+        if (newSearch !== '' & newSearch !== '?') {
+          newSearch += '&';
+        }
+        /*
+        TODO - complete ajax call to add user
+        $.ajax({
+          type: 'POST',
+          url: 
+        });
+        */
+        newSearch += 'username=' + (prompt('What is your name?') || 'anonymous');
+        window.location.search = newSearch;
+      }
+    </script>
     <div id="main">
       <h1>chatterbox</h1>
       <!-- Your HTML goes here! -->

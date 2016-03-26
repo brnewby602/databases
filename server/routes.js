@@ -3,6 +3,7 @@ var router = require('express').Router();
 
 //Connect controller methods to their corresponding routes
 router.get('/messages', controller.messages.get);
+router.options('/messages', controller.messages.get);
 
 router.post('/messages', controller.messages.post);
 

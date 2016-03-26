@@ -31,7 +31,7 @@ module.exports.createConnection = function() {
 | message   | char(255) | YES  |     | NULL    |                |
 | createdAt | datetime  | YES  |     | NULL    |                |
 | updatedAt | datetime  | YES  |     | NULL    |                |
-| id_room   | int(11)   | YES  | MUL | NULL    |                |
+| roomname  | char(255) | YES  | MUL | NULL    |                |
 | id_user   | int(11)   | YES  | MUL | NULL    |                |
 +---------------------------------------------------------------+
 
@@ -70,13 +70,15 @@ module.exports.insertUser = function(username) {
 [{"id":1,"message":"In mercy's name, three days is all I need.","createdAt":"2016-03-26T02:02:33.000Z","updatedAt":"2016-03-26T02:02:33.000Z","roomname":"Hello","id_user":1}]
 */
 module.exports.getMessages = function(callback) {
-  connection.query('SELECT * FROM messages', function (err, results) {
+  connection.query('SELECT * FROM messages INNER JOIN user on messages.id_user = user.id', function (err, results) {
     if (err) {
       console.log('Error in getting messages: ' + err);
     } else {
       results.map(function(chat) {
         chat.objectId = chat.id;
+        chat.username = chat.name;
         delete chat.id;
+        delete chat.name;
       });
       callback({ results: results });
     }
